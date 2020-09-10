@@ -30,5 +30,5 @@ dependencies {
 
 application {
     // Define the main class for the application.
-    mainClassName = 'ru.nsu.fit.kuznetsov.Task_1_1.heapSort'
+    mainClassName = 'ru.nsu.fit.kuznetsov.heapsort.HeapSort'
 }
