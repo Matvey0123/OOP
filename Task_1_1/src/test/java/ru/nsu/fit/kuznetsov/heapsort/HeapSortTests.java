@@ -35,7 +35,6 @@ public class HeapSortTests {
       int a;
       for (int j = 0; j < len; j++) {
         a = rn.nextInt();
-        System.out.println(a);
         mySort[j] = a;
         libSort[j] = a;
       }
@@ -43,5 +42,13 @@ public class HeapSortTests {
       Arrays.sort(libSort);
       assertArrayEquals(mySort, libSort);
     }
+  }
+
+  @Test
+  public void negNumsTest() {
+    int[] arr = {-100, -1523, 0, -1, 23, -10};
+    int[] correct = {-1523, -100, -10, -1, 0, 23};
+    HeapSort.sort(arr);
+    assertArrayEquals(arr, correct);
   }
 }
