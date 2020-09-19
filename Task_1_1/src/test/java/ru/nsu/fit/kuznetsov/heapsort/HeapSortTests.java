@@ -28,7 +28,7 @@ public class HeapSortTests {
   @Test
   public void mainTest() {
     Random rn = new Random(0);
-    for (int i = 0; i < 1; i++) {
+    for (int i = 0; i < 1000; i++) {
       int len = rn.nextInt(10000) + 1;
       int[] mySort = new int[len];
       int[] libSort = new int[len];
