@@ -9,29 +9,34 @@ public class SearchSubstr {
   /**
    * Reads a text from file using buffered reading and calls KMPSearch method.
    *
-   * @param FileName the name of file with text
+   * @param fileName the name of file with text
    * @param sub the substring we want to found
    * @return The ArrayList with all occurrences of substring in file
    * @throws IOException -if an I/O error occurs
    */
-  public static ArrayList<Integer> search(String FileName, String sub) throws IOException {
-    File file = new File(FileName);
+  public static ArrayList<Integer> search(String fileName, String sub) throws IOException {
     Reader reader =
         new BufferedReader(
-            new InputStreamReader(new FileInputStream("input.txt"), StandardCharsets.UTF_8));
-    ArrayList<Integer> found = new ArrayList<>();
-    int bufLen = 1000000;
-    char[] buf = new char[bufLen];
-    int globalIndex = 0;
-    int num = reader.read(buf, 0, bufLen);
-    found = KMPSearch(String.valueOf(buf), sub, globalIndex);
+            new InputStreamReader(new FileInputStream(fileName), StandardCharsets.UTF_8));
+    ArrayList<Integer> found;
+    final int BUFFER_SIZE = 100000;
+    char[] buf = new char[BUFFER_SIZE];
+    int[] prefixFunc = prefixFunction(sub);
+    int mainIndexInFile = 0;
+    int numOfReadChars = reader.read(buf, 0, BUFFER_SIZE);
+    found = KMPSearch(String.valueOf(buf), sub, prefixFunc, mainIndexInFile);
     int subLen = sub.length();
-    num = num - subLen + 1;
-    while (num != -1) {
-      System.arraycopy(buf, bufLen - subLen + 1, buf, 0, subLen - 1);
-      globalIndex = globalIndex + num;
-      num = reader.read(buf, subLen - 1, bufLen - subLen + 1);
-      found.addAll(KMPSearch(String.valueOf(buf).substring(0, subLen - 1 + num), sub, globalIndex));
+    numOfReadChars = numOfReadChars - subLen + 1;
+    while (numOfReadChars != -1) {
+      System.arraycopy(buf, BUFFER_SIZE - subLen + 1, buf, 0, subLen - 1);
+      mainIndexInFile = mainIndexInFile + numOfReadChars;
+      numOfReadChars = reader.read(buf, subLen - 1, BUFFER_SIZE - subLen + 1);
+      found.addAll(
+          KMPSearch(
+              String.valueOf(buf).substring(0, subLen - 1 + numOfReadChars),
+              sub,
+              prefixFunc,
+              mainIndexInFile));
     }
     return found;
   }
@@ -59,13 +64,14 @@ public class SearchSubstr {
    *
    * @param text the buffer where we will search the substring
    * @param sample the substring to be found
+   * @param prefixFunc the integer array that used by KMP algorithm
    * @param idx the global index which keeps how many characters in our file have been already
    *     processed
    * @return The ArrayList with all occurrences of substring in the buffer
    */
-  private static ArrayList<Integer> KMPSearch(String text, String sample, int idx) {
+  private static ArrayList<Integer> KMPSearch(
+      String text, String sample, int[] prefixFunc, int idx) {
     ArrayList<Integer> found = new ArrayList<>();
-    int[] prefixFunc = prefixFunction(sample);
     int i = 0;
     int j = 0;
     while (i < text.length()) {
