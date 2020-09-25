@@ -13,88 +13,34 @@ public class SearchSubstrTests {
 
   @Test
   public void testFromTask1() throws IOException {
-    File file = new File("input.txt");
-    if (file.isFile()) {
-      try {
-        file.delete();
-      } catch (SecurityException e) {
-        e.printStackTrace();
-        fail();
-      }
-    }
-    boolean isCreate = file.createNewFile();
-    if (isCreate) {
-      Writer writer =
-          new BufferedWriter(
-              new OutputStreamWriter(new FileOutputStream("input.txt"), StandardCharsets.UTF_8));
-      writer.write("Я хочу пирог!");
-      writer.close();
-      String s = "пирог";
-      ArrayList<Integer> res;
-      res = search("input.txt", s);
-      ArrayList<Integer> correct = new ArrayList<>();
-      correct.add(7);
-      Assert.assertEquals(correct, res);
-      file.delete();
-    }
+    String s = "пирог";
+    ArrayList<Integer> res;
+    res = search("src/test/resources/input1.txt", s);
+    ArrayList<Integer> correct = new ArrayList<>();
+    correct.add(7);
+    Assert.assertEquals(correct, res);
   }
 
   @Test
   public void testFromTask2() throws IOException {
-    File file = new File("input.txt");
-    if (file.isFile()) {
-      try {
-        file.delete();
-      } catch (SecurityException e) {
-        e.printStackTrace();
-        fail();
-      }
-    }
-    boolean isCreate = file.createNewFile();
-    if (isCreate) {
-      Writer writer =
-          new BufferedWriter(
-              new OutputStreamWriter(new FileOutputStream("input.txt"), StandardCharsets.UTF_8));
-      writer.write("Я хочу сок!");
-      writer.close();
-      String s = "пирог";
-      ArrayList<Integer> res;
-      res = search("input.txt", s);
-      ArrayList<Integer> correct = new ArrayList<>();
-      Assert.assertEquals(correct, res);
-      file.delete();
-    }
+    String s = "пирог";
+    ArrayList<Integer> res;
+    res = search("src/test/resources/input2.txt", s);
+    ArrayList<Integer> correct = new ArrayList<>();
+    Assert.assertEquals(correct, res);
   }
 
   @Test
   public void myTest() throws IOException {
-    File file = new File("input.txt");
-    if (file.isFile()) {
-      try {
-        file.delete();
-      } catch (SecurityException e) {
-        e.printStackTrace();
-        fail();
-      }
-    }
-    boolean isCreate = file.createNewFile();
-    if (isCreate) {
-      Writer writer =
-          new BufferedWriter(
-              new OutputStreamWriter(new FileOutputStream("input.txt"), StandardCharsets.UTF_8));
-      writer.write("acbabacjkababaceicnepcpewmcpewcmpoewaba");
-      writer.close();
-      String s = "aba";
-      ArrayList<Integer> res;
-      res = search("input.txt", s);
-      ArrayList<Integer> correct = new ArrayList<>();
-      correct.add(3);
-      correct.add(9);
-      correct.add(11);
-      correct.add(36);
-      Assert.assertEquals(correct, res);
-      file.delete();
-    }
+    String s = "aba";
+    ArrayList<Integer> res;
+    res = search("src/test/resources/input3.txt", s);
+    ArrayList<Integer> correct = new ArrayList<>();
+    correct.add(3);
+    correct.add(9);
+    correct.add(11);
+    correct.add(36);
+    Assert.assertEquals(correct, res);
   }
 
   @Test
