@@ -9,15 +9,15 @@ public class SearchSubstr {
   /**
    * Reads a text from file using buffered reading and calls KMPSearch method.
    *
-   * @param fileName the name of file with text
+   * @param input
    * @param sub the substring we want to found
    * @return The ArrayList with all occurrences of substring in file
    * @throws IOException -if an I/O error occurs
    */
-  public static ArrayList<Integer> search(String fileName, String sub) throws IOException {
+  public static ArrayList<Integer> search(InputStream input, String sub) throws IOException {
     Reader reader =
         new BufferedReader(
-            new InputStreamReader(new FileInputStream(fileName), StandardCharsets.UTF_8));
+            new InputStreamReader(input, StandardCharsets.UTF_8));
     ArrayList<Integer> found;
     final int BUFFER_SIZE = 100000;
     char[] buf = new char[BUFFER_SIZE];
@@ -39,6 +39,11 @@ public class SearchSubstr {
               mainIndexInFile));
     }
     return found;
+  }
+
+  public static ArrayList<Integer> search(String fileName, String sub) throws IOException{
+    InputStream in = new FileInputStream(fileName);
+    return search(in,sub);
   }
 
   /**
