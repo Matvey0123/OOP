@@ -38,11 +38,10 @@ public class StackTests {
       stack.push(i);
       correct[i] = numberOfElms - i - 1;
     }
-    Iterator<Integer> iterator = stack.iterator();
     int[] result = new int[numberOfElms];
     int counter = 0;
-    while (iterator.hasNext()) {
-      result[counter] = iterator.next();
+    for(Integer i: stack){
+      result[counter] = i;
       counter++;
     }
     assertArrayEquals(correct, result);
@@ -70,21 +69,20 @@ public class StackTests {
     GregorianCalendar[] correct = new GregorianCalendar[numOfElms];
     for (int i = 0; i < numOfElms; i++) {
       year = rn.nextInt(2020) + 1;
-      month = rn.nextInt(12) + 1;
+      month = rn.nextInt(12);
       dayOfMonth = rn.nextInt(31) + 1;
-      hourOfDay = rn.nextInt(24) + 1;
-      minute = rn.nextInt(59) + 1;
-      second = rn.nextInt(59) + 1;
+      hourOfDay = rn.nextInt(24);
+      minute = rn.nextInt(60);
+      second = rn.nextInt(60);
       GregorianCalendar gregorianCalendar =
           new GregorianCalendar(year, month, dayOfMonth, hourOfDay, minute, second);
       stack.push(gregorianCalendar);
       correct[numOfElms - i - 1] = gregorianCalendar;
     }
-    Iterator<GregorianCalendar> iterator = stack.iterator();
     GregorianCalendar[] result = new GregorianCalendar[numOfElms];
     int counter = 0;
-    while (iterator.hasNext()) {
-      result[counter] = iterator.next();
+    for(GregorianCalendar i: stack){
+      result[counter] = i;
       counter++;
     }
     assertArrayEquals(correct, result);

@@ -16,14 +16,14 @@ import java.util.NoSuchElementException;
 public class Stack<T> implements Iterable<T> {
   T[] arr;
   int counter;
+  final int DEFAULT_SIZE = 10;
 
   /** This class provides the Iterator for our stack. */
   public class StackIterator implements Iterator<T> {
     Stack<T> stack;
     int curr;
-
-    public StackIterator(Stack<T> stack) {
-      this.stack = stack;
+    private StackIterator() {
+      stack = Stack.this;
       curr = stack.counter - 1;
     }
 
@@ -53,7 +53,7 @@ public class Stack<T> implements Iterable<T> {
 
   @SuppressWarnings("unchecked")
   public Stack() {
-    arr = (T[]) new Object[10];
+    arr = (T[]) new Object[DEFAULT_SIZE];
     counter = 0;
   }
 
@@ -66,8 +66,7 @@ public class Stack<T> implements Iterable<T> {
     if (counter == arr.length) {
       arr = Arrays.copyOf(arr, arr.length * 2);
     }
-    arr[counter] = elem;
-    counter++;
+    arr[counter++] = elem;
   }
 
   /**
@@ -98,6 +97,6 @@ public class Stack<T> implements Iterable<T> {
    */
   @Override
   public Iterator<T> iterator() {
-    return new StackIterator(this);
+    return new StackIterator();
   }
 }
