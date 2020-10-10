@@ -15,35 +15,35 @@ public class SearchSubstr {
    * @throws IOException -if an I/O error occurs
    */
   public static ArrayList<Integer> search(InputStream input, String sub) throws IOException {
-    Reader reader =
-        new BufferedReader(
-            new InputStreamReader(input, StandardCharsets.UTF_8));
-    ArrayList<Integer> found;
-    final int BUFFER_SIZE = 100000;
-    char[] buf = new char[BUFFER_SIZE];
-    int[] prefixFunc = prefixFunction(sub);
-    int mainIndexInFile = 0;
-    int numOfReadChars = reader.read(buf, 0, BUFFER_SIZE);
-    found = KMPSearch(String.valueOf(buf), sub, prefixFunc, mainIndexInFile);
-    int subLen = sub.length();
-    numOfReadChars = numOfReadChars - subLen + 1;
-    while (numOfReadChars != -1) {
-      System.arraycopy(buf, BUFFER_SIZE - subLen + 1, buf, 0, subLen - 1);
-      mainIndexInFile = mainIndexInFile + numOfReadChars;
-      numOfReadChars = reader.read(buf, subLen - 1, BUFFER_SIZE - subLen + 1);
-      found.addAll(
-          KMPSearch(
-              String.valueOf(buf).substring(0, subLen - 1 + numOfReadChars),
-              sub,
-              prefixFunc,
-              mainIndexInFile));
+    try (Reader reader = new BufferedReader(new InputStreamReader(input, StandardCharsets.UTF_8))) {
+      ArrayList<Integer> found;
+      final int BUFFER_SIZE = 100000;
+      char[] buf = new char[BUFFER_SIZE];
+      int[] prefixFunc = prefixFunction(sub);
+      int mainIndexInFile = 0;
+      int numOfReadChars = reader.read(buf, 0, BUFFER_SIZE);
+      found = KMPSearch(String.valueOf(buf), sub, prefixFunc, mainIndexInFile);
+      int subLen = sub.length();
+      numOfReadChars = numOfReadChars - subLen + 1;
+      while (numOfReadChars != -1) {
+        System.arraycopy(buf, BUFFER_SIZE - subLen + 1, buf, 0, subLen - 1);
+        mainIndexInFile = mainIndexInFile + numOfReadChars;
+        numOfReadChars = reader.read(buf, subLen - 1, BUFFER_SIZE - subLen + 1);
+        found.addAll(
+            KMPSearch(
+                String.valueOf(buf).substring(0, subLen - 1 + numOfReadChars),
+                sub,
+                prefixFunc,
+                mainIndexInFile));
+      }
+      return found;
     }
-    return found;
   }
 
-  public static ArrayList<Integer> search(String fileName, String sub) throws IOException{
-    InputStream in = new FileInputStream(fileName);
-    return search(in,sub);
+  public static ArrayList<Integer> search(String fileName, String sub) throws IOException {
+    try (InputStream in = new FileInputStream(fileName)) {
+      return search(in, sub);
+    }
   }
 
   /**
