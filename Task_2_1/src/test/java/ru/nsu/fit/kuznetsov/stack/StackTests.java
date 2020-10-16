@@ -40,7 +40,7 @@ public class StackTests {
     }
     int[] result = new int[numberOfElms];
     int counter = 0;
-    for(Integer i: stack){
+    for (Integer i : stack) {
       result[counter] = i;
       counter++;
     }
@@ -81,7 +81,7 @@ public class StackTests {
     }
     GregorianCalendar[] result = new GregorianCalendar[numOfElms];
     int counter = 0;
-    for(GregorianCalendar i: stack){
+    for (GregorianCalendar i : stack) {
       result[counter] = i;
       counter++;
     }

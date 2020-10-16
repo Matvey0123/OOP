@@ -19,9 +19,10 @@ public class Stack<T> implements Iterable<T> {
   final int DEFAULT_SIZE = 10;
 
   /** This class provides the Iterator for our stack. */
-  public class StackIterator implements Iterator<T> {
+  private class StackIterator implements Iterator<T> {
     Stack<T> stack;
     int curr;
+
     private StackIterator() {
       stack = Stack.this;
       curr = stack.counter - 1;
