@@ -1,5 +1,4 @@
 package ru.nsu.fit.kuznetsov.calendar;
-import java.lang.String;
 
 /**
  * Implementation of this interface allows us to use basic methods in our calendar.
@@ -8,7 +7,7 @@ public interface Calendar {
     void addDays(int days);
     void addYears(int years);
     void addMonths(int months);
-    String weekDay();
+    WeekDay weekDay();
     int day();
     int month();
     int year();

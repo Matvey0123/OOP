@@ -11,8 +11,8 @@ public class AppTest {
   @Test public void weekDayAfter1024Days(){
     GregorianCalendar calendar = new GregorianCalendar(2020,10,29);
     calendar.addDays(1024);
-    String result = calendar.weekDay();
-    assertEquals("Saturday", result);
+    WeekDay result = calendar.weekDay();
+    assertEquals(WeekDay.SATURDAY, result);
   }
 
   @Test public void dateFromTheVictoryDay(){
@@ -24,8 +24,8 @@ public class AppTest {
   }
   @Test public void weekDayOfMyBirthday(){
     GregorianCalendar calendar = new GregorianCalendar(2001, 12,15);
-    String result = calendar.weekDay();
-    assertEquals("Saturday",result);
+    WeekDay result = calendar.weekDay();
+    assertEquals(WeekDay.SATURDAY,result);
   }
   @Test public void monthAfter17Weeks(){
     GregorianCalendar calendar = new GregorianCalendar(2020,10,29);

@@ -1,7 +1,6 @@
 package ru.nsu.fit.kuznetsov.calendar;
 
 import java.lang.IllegalArgumentException;
-import java.lang.String;
 
 /**
  * This class allows us to use methods from the interface Calendar using Gregorian Calendar Rules.
@@ -16,6 +15,7 @@ public class GregorianCalendar implements Calendar {
 
   /**
    * creates new Gregorian Calendar
+   *
    * @param year the year to be set
    * @param month the month to be set
    * @param dayOfMonth the day to be set
@@ -39,6 +39,7 @@ public class GregorianCalendar implements Calendar {
 
   /**
    * Checks whether the year leap or not.
+   *
    * @param year the year to be checked
    * @return true if the year is leap and false otherwise
    */
@@ -48,6 +49,7 @@ public class GregorianCalendar implements Calendar {
 
   /**
    * Converts the date into number of days.
+   *
    * @param day the day of month to convert
    * @param month the month to convert
    * @param year the year to convert
@@ -72,35 +74,70 @@ public class GregorianCalendar implements Calendar {
   }
 
   /**
+   * Makes correct the number of month and the count of days. If this method gets already correct
+   * first parameter, it does not do anything.
+   *
+   * @param daysToCorrect the incorrect count of days
+   * @param numOfMonth the num of current month from 0 to 11 inclusive
+   * @param isLeapYear the information about leap year
+   * @return the correct count of days
+   */
+  private int correctMonth(int daysToCorrect, int numOfMonth, boolean isLeapYear) {
+    if (isLeapYear && daysToCorrect - maxDaysInMonthsInLeapYear[numOfMonth] > 0) {
+      daysToCorrect -= maxDaysInMonthsInLeapYear[numOfMonth];
+      month++;
+    }
+    if (!isLeapYear && daysToCorrect - maxDaysInMonthsInCommonYear[numOfMonth] > 0) {
+      daysToCorrect -= maxDaysInMonthsInCommonYear[numOfMonth];
+      month++;
+    }
+    return daysToCorrect;
+  }
+
+  /**
+   * Searches next friday from current week day.
+   *
+   * @param currDay the number of current day in month
+   * @param currWeekDay the current week day
+   * @return the changed current day in month
+   */
+  private int searchNextFriday(int currDay, WeekDay currWeekDay) {
+    switch (currWeekDay) {
+      case MONDAY:
+        return currDay + 4;
+      case TUESDAY:
+        return currDay + 3;
+      case WEDNESDAY:
+        return currDay + 2;
+      case THURSDAY:
+        return currDay + 1;
+      case SATURDAY:
+        return currDay + 6;
+      case SUNDAY:
+        return currDay + 5;
+    }
+    return currDay;
+  }
+
+  /**
    * Adds days to the Calendar.
+   *
    * @param days the count of days to be added
    */
   @Override
   public void addDays(int days) {
     days += dayOfMonth;
     for (int i = month - 1; i < 12; i++) {
-      if (isLeap(year)) {
-        if (days - maxDaysInMonthsInLeapYear[i] <= 0) {
-          break;
-        } else {
-          days -= maxDaysInMonthsInLeapYear[i];
-          month++;
-          if (month > 12) {
-            month /= 12;
-            year++;
-            i = -1;
-          }
-        }
-      } else if (days - maxDaysInMonthsInCommonYear[i] <= 0) {
+      int restDays = correctMonth(days, i, isLeap(year));
+      if (days == restDays) {
         break;
       } else {
-        days -= maxDaysInMonthsInCommonYear[i];
-        month++;
-        if (month > 12) {
-          month /= 12;
-          year++;
-          i = -1;
-        }
+        days = restDays;
+      }
+      if (month > 12) {
+        month /= 12;
+        year++;
+        i = -1;
       }
     }
     dayOfMonth = days;
@@ -108,6 +145,7 @@ public class GregorianCalendar implements Calendar {
 
   /**
    * Adds years to the Calendar.
+   *
    * @param years the count of years to be added
    */
   @Override
@@ -125,6 +163,7 @@ public class GregorianCalendar implements Calendar {
 
   /**
    * Adds months to the Calendar.
+   *
    * @param months the count of months to be added
    */
   @Override
@@ -147,10 +186,11 @@ public class GregorianCalendar implements Calendar {
 
   /**
    * Evaluates a weekday of the Calendar using constant day 25.10.2020.
+   *
    * @return the name of weekday as String
    */
   @Override
-  public String weekDay() {
+  public WeekDay weekDay() {
     int constDay = 25;
     int constMonth = 10;
     int constYear = 2020;
@@ -166,25 +206,24 @@ public class GregorianCalendar implements Calendar {
     }
     switch (ans) {
       case (1):
-        return "Monday";
+        return WeekDay.MONDAY;
       case (2):
-        return "Tuesday";
+        return WeekDay.TUESDAY;
       case (3):
-        return "Wednesday";
+        return WeekDay.WEDNESDAY;
       case (4):
-        return "Thursday";
+        return WeekDay.THURSDAY;
       case (5):
-        return "Friday";
+        return WeekDay.FRIDAY;
       case (6):
-        return "Saturday";
-      case (7):
-        return "Sunday";
+        return WeekDay.SATURDAY;
     }
-    return "";
+    return WeekDay.SUNDAY;
   }
 
   /**
    * Returns the number of days in the current Calendar.
+   *
    * @return the number of days
    */
   @Override
@@ -194,6 +233,7 @@ public class GregorianCalendar implements Calendar {
 
   /**
    * Returns the current month of the Calendar.
+   *
    * @return the current month
    */
   @Override
@@ -203,6 +243,7 @@ public class GregorianCalendar implements Calendar {
 
   /**
    * Returns the current year of the Calendar.
+   *
    * @return the current year
    */
   @Override
@@ -211,45 +252,35 @@ public class GregorianCalendar implements Calendar {
   }
 
   /**
-   * Subscribes the date from the Calendar.
-   * First of all evaluates the count of days between two dates.
-   * After that evaluates the count of years from the beginning of the next year in Date.
-   * The count of months and days starts evaluate from 01.01. of the next after last year to be added.
+   * Subscribes the date from the Calendar. First of all evaluates the count of days between two
+   * dates. After that evaluates the count of years from the beginning of the next year in Date. The
+   * count of months and days starts evaluate from 01.01. of the next after last year to be added.
+   *
    * @param days days of the Date to add
    * @param months months of the Date to add
    * @param years years of the Date to add
    */
   @Override
   public void subDate(int days, int months, int years) {
-    int dateToSubInDays = dateToDays(days,months,years);
-    int currDateInDays = dateToDays(dayOfMonth,month,year);
+    int dateToSubInDays = dateToDays(days, months, years);
+    int currDateInDays = dateToDays(dayOfMonth, month, year);
     int resultNumOfDays = currDateInDays - dateToSubInDays;
-    dayOfMonth = month = 0;
     int countLeap = year;
-    year = 0;
-    while(resultNumOfDays >= 366){
+    dayOfMonth = month = year = 0;
+    while (resultNumOfDays >= 366) {
       countLeap++;
-      if(countLeap %4 == 0){
+      if (isLeap(countLeap)) {
         resultNumOfDays--;
       }
-      resultNumOfDays-=365;
+      resultNumOfDays -= 365;
       year++;
     }
-    for(int i =0; i< 12; i++){
-      if(countLeap %4 == 0){
-        if(resultNumOfDays - maxDaysInMonthsInLeapYear[i] < 0){
-          break;
-        }else{
-          resultNumOfDays -= maxDaysInMonthsInLeapYear[i];
-          month++;
-        }
-      }else{
-        if(resultNumOfDays -maxDaysInMonthsInCommonYear[i] < 0){
-          break;
-        } else{
-          resultNumOfDays -= maxDaysInMonthsInCommonYear[i];
-          month++;
-        }
+    for (int i = 0; i < 12; i++) {
+      int res = correctMonth(resultNumOfDays, i, isLeap(countLeap));
+      if (res == resultNumOfDays) {
+        break;
+      } else {
+        resultNumOfDays = res;
       }
     }
     dayOfMonth = resultNumOfDays;
@@ -257,6 +288,7 @@ public class GregorianCalendar implements Calendar {
 
   /**
    * Evaluates how many days to new year.
+   *
    * @return the number of days
    */
   @Override
@@ -272,67 +304,40 @@ public class GregorianCalendar implements Calendar {
 
   /**
    * Evaluates the date of the next friday 13.
+   *
    * @return the date of friday 13 as Calendar
    */
   @Override
   public Calendar nextFriday13() {
-    String currWeekDay = this.weekDay();
+    WeekDay currWeekDay = this.weekDay();
     int nextFridayDay = dayOfMonth, nextFridayMonth = month, nextFridayYear = year;
-    switch (currWeekDay) {
-      case ("Friday"):
-        break;
-      case ("Monday"):
-        nextFridayDay += 4;
-        break;
-      case ("Tuesday"):
-        nextFridayDay += 3;
-        break;
-      case ("Wednesday"):
-        nextFridayDay += 2;
-        break;
-      case ("Thursday"):
-        nextFridayDay += 1;
-        break;
-      case ("Saturday"):
-        nextFridayDay += 6;
-        break;
-      case ("Sunday"):
-        nextFridayDay += 5;
-        break;
-    }
-    if (isLeap(nextFridayYear)) {
-      if (nextFridayDay > maxDaysInMonthsInLeapYear[nextFridayMonth - 1]) {
-        nextFridayDay %= maxDaysInMonthsInLeapYear[nextFridayMonth - 1];
-        nextFridayMonth++;
-      }
-    } else if (!isLeap(nextFridayYear)) {
-      if (nextFridayDay > maxDaysInMonthsInCommonYear[nextFridayMonth - 1]) {
-        nextFridayDay %= maxDaysInMonthsInCommonYear[nextFridayMonth - 1];
-        nextFridayMonth++;
-      }
-    }
-    if (nextFridayMonth > 12) {
-      nextFridayMonth = 1;
+    nextFridayDay = searchNextFriday(nextFridayDay, currWeekDay);
+    nextFridayDay = correctMonth(nextFridayDay, month - 1, isLeap(nextFridayYear));
+    if (month > 12) {
+      month = 1;
       nextFridayYear++;
     }
     while (nextFridayDay != 13) {
       nextFridayDay += 7;
-      if (isLeap(nextFridayYear)) {
-        if (nextFridayDay > maxDaysInMonthsInLeapYear[nextFridayMonth - 1]) {
-          nextFridayDay %= maxDaysInMonthsInLeapYear[nextFridayMonth - 1];
-          nextFridayMonth++;
-        }
-      } else if (!isLeap(nextFridayYear)) {
-        if (nextFridayDay > maxDaysInMonthsInCommonYear[nextFridayMonth - 1]) {
-          nextFridayDay %= maxDaysInMonthsInCommonYear[nextFridayMonth - 1];
-          nextFridayMonth++;
-        }
-      }
-      if (nextFridayMonth > 12) {
-        nextFridayMonth = 1;
+      nextFridayDay = correctMonth(nextFridayDay, month - 1, isLeap(nextFridayYear));
+      if (month > 12) {
+        month = 1;
         nextFridayYear++;
       }
     }
+    int t = month;
+    month = nextFridayMonth;
+    nextFridayMonth = t;
     return new GregorianCalendar(nextFridayYear, nextFridayMonth, nextFridayDay);
   }
+}
+
+enum WeekDay {
+  MONDAY,
+  TUESDAY,
+  WEDNESDAY,
+  THURSDAY,
+  FRIDAY,
+  SATURDAY,
+  SUNDAY
 }
