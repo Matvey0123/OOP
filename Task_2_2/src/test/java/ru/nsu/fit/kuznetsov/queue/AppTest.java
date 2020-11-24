@@ -22,11 +22,11 @@ public class AppTest {
     queue.insert(5, "penguin");
     queue.insert(500, "parrot");
     queue.extractMax();
-    assertEquals(Optional.of(10),queue.stream().map(Map.Entry::getKey).max(Integer::compareTo));
-    assertEquals(Optional.of(5),queue.stream().map(Map.Entry::getKey).min(Integer::compareTo));
+    assertEquals(Optional.of(10), queue.stream().map(Map.Entry::getKey).max(Integer::compareTo));
+    assertEquals(Optional.of(5), queue.stream().map(Map.Entry::getKey).min(Integer::compareTo));
     String[] res = queue.stream().map(Map.Entry::getValue).toArray(String[]::new);
     String[] correct = {"people", "penguin"};
-    assertArrayEquals(correct,res);
+    assertArrayEquals(correct, res);
   }
 
   @Test
