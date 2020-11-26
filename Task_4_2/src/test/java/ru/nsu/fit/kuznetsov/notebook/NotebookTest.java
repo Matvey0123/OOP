@@ -17,7 +17,7 @@ public class NotebookTest {
         ObjectMapper mapper = new ObjectMapper();
         mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
         ObjectWriter writer = mapper.writer(new DefaultPrettyPrinter());
-        String result = writer.writeValueAsString(notebook.list);
+        String result = writer.writeValueAsString(notebook.notes);
         assertTrue(result.contains("First note"));
         assertTrue(result.contains("My first note"));
     }
@@ -35,8 +35,8 @@ public class NotebookTest {
         correct.addNote(correctArgs);
         correct.addNote(args);
         for(int i =0;i<2;i++){
-            assertEquals(correct.list.get(i).name,notebook.list.get(i).name);
-            assertEquals(correct.list.get(i).note,notebook.list.get(i).note);
+            assertEquals(correct.notes.get(i).name,notebook.notes.get(i).name);
+            assertEquals(correct.notes.get(i).note,notebook.notes.get(i).note);
         }
     }
 }
