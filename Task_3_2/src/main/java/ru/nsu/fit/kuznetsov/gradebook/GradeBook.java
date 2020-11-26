@@ -1,13 +1,15 @@
 package ru.nsu.fit.kuznetsov.gradebook;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class GradeBook {
-  List<Semester> semesters;
-  Grade markForDiplomaProject;
-  int currentSemester;
-
+  private List<Semester> semesters;
+  private Grade markForDiplomaProject;
+  private int currentSemester;//TODO очень подозрительное!!! это примерно semesters.size
+//TODO хранить общее число семестров
   public static class Semester {
     List<Subject> subjects;
 
@@ -16,7 +18,7 @@ public class GradeBook {
       FinalChallenge challenge;
       Grade mark;
 
-      public Subject(String name, FinalChallenge challenge, Grade mark) {
+      public Subject(String name, FinalChallenge challenge, Grade mark) {//TODO функцию проверки марк и челендж
         this.name = name;
         this.challenge = challenge;
         this.mark = mark;
@@ -34,6 +36,7 @@ public class GradeBook {
     public void addSubject(Subject subject) {
       subjects.add(subject);
     }
+    //TODO добавить пересдачи
   }
 
   public GradeBook(int count, Grade markForDiplomaProject) {
@@ -42,7 +45,7 @@ public class GradeBook {
     this.currentSemester = count;
   }
 
-  public void addSemester(Semester semester, int numOfSemester) {
+  public void addSemester(Semester semester, int numOfSemester) {//TODO нужен ли здесь номер семестра
     semesters.add(numOfSemester - 1, semester);
   }
 
@@ -51,19 +54,18 @@ public class GradeBook {
     return markForDiplomaProject == Grade.EXC;
   }
 
-  private boolean checkSatMarks() {
+  private boolean checkSatMarks() {//TODO добавить проверки на незачеты и двойки
     boolean isSat = false;
     for (int i = 0; i < currentSemester - 1; i++) {
       isSat |=
           semesters.get(i).subjects.stream()
-              .map(subject -> subject.mark.ordinal())
-              .anyMatch(mark -> mark == 3);
+              .anyMatch(subject -> subject.mark == Grade.SAT);
     }
     return !isSat;
   }
 
   private boolean checkPercentOfExcGrades() {
-    List<String> checkedSubjects = new ArrayList<>();
+    Set<String> checkedSubjects = new HashSet<>();
     float totalCount = 0.00f, countExc = 0.00f;
     for (int i = currentSemester - 1; i >= 0; i--) {
       List<Semester.Subject> subjects = semesters.get(i).subjects;
@@ -84,7 +86,7 @@ public class GradeBook {
     return countExc / totalCount >= 0.75f;
   }
 
-  public float currentAveragePoint() {
+  public float currentAverageGrade() {
     int cnt = 0;
     float sum = 0.0f;
     for (int i = 0; i < currentSemester - 1; i++) {
@@ -103,13 +105,13 @@ public class GradeBook {
     return sum / cnt;
   }
 
-  public boolean largerStipend() {
+  public boolean largerStipend() { //TODO ПРОВЕРИТЬ НЕЗАЧЕТЫ
     List<Semester.Subject> last = semesters.get(currentSemester - 2).subjects;
     return last.stream()
         .filter(
             subject ->
-                subject.challenge == FinalChallenge.DIFF_CREDIT
-                    || subject.challenge == FinalChallenge.EXAM)
+                    (subject.challenge == FinalChallenge.DIFF_CREDIT
+                    || subject.challenge == FinalChallenge.EXAM))
         .map(subject -> subject.mark)
         .allMatch(mark -> mark == Grade.EXC);
   }

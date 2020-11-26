@@ -46,7 +46,7 @@ public class Tests {
     GradeBook.Semester secondSemester = new GradeBook.Semester(secondSemesterSubjects);
     gradeBook.addSemester(secondSemester,2);
     assertFalse("Not larger stipend!",gradeBook.largerStipend());
-    assertEquals(4.66f,gradeBook.currentAveragePoint(),0.01f);
+    assertEquals(4.66f,gradeBook.currentAverageGrade(),0.01f);
     assertFalse("Not red Diploma yet!",gradeBook.redDiploma());
   }
 
