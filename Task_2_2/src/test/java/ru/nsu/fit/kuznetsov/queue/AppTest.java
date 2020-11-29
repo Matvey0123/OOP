@@ -8,6 +8,7 @@ import org.junit.Test;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static org.junit.Assert.*;
 
@@ -30,21 +31,42 @@ public class AppTest {
   }
 
   @Test
-  public void streamTest() {
+  public void testIterator() {
+    MyPriorityQueue<Integer, String> queue = new MyPriorityQueue<>();
+    queue.insert(200, "dog");
+    queue.insert(10, "people");
+    queue.insert(5, "penguin");
+    queue.insert(500, "parrot");
+    Iterator<String> iterator = queue.iterator();
+    String[] values = new String[4];
+    int counter = 0;
+    for (String value : queue) {
+      values[counter] = value;
+      counter++;
+    }
+    String[] correct = queue.stream().map(Map.Entry::getValue).toArray(String[]::new);
+    assertArrayEquals(correct, values);
+  }
+
+  @Test
+  public void sortedTest() {
     MyPriorityQueue<Integer, String> queue = new MyPriorityQueue<>();
     Random random = new Random();
     for (int i = 0; i < 20; i++) {
       queue.insert(random.nextInt(), "" + random.nextInt());
     }
     Integer[] arr = queue.stream().map(Map.Entry::getKey).sorted().toArray(Integer[]::new);
+    Object[] sortWithArg =
+        queue.stream().map(Map.Entry::getKey).sorted(Integer::compareTo).toArray();
     Integer[] correct = Arrays.copyOf(arr, arr.length);
     Arrays.sort(correct);
     assertArrayEquals(correct, arr);
+    assertArrayEquals(correct, sortWithArg);
     assertEquals(20, arr.length);
   }
 
   @Test
-  public void streamTest2() {
+  public void filterTest() {
     MyPriorityQueue<Integer, Integer> queue = new MyPriorityQueue<>();
     Random random = new Random();
     for (int i = 0; i < 100; i++) {
@@ -65,7 +87,7 @@ public class AppTest {
   }
 
   @Test
-  public void streamTest3() {
+  public void collectTest() {
     MyPriorityQueue<Integer, String> queue = new MyPriorityQueue<>();
     List<String> correct = new LinkedList<>();
     Random random = new Random();
@@ -73,16 +95,21 @@ public class AppTest {
       queue.insert(random.nextInt(), "" + random.nextInt());
     }
     List<String> list = queue.stream().map(Map.Entry::getValue).collect(Collectors.toList());
+    List<String> list2 =
+        queue.stream()
+            .map(Map.Entry::getValue)
+            .collect(ArrayList::new, ArrayList::add, ArrayList::addAll);
     for (int i = 0; i < 10; i++) {
       correct.add(queue.extractMax());
     }
     for (int i = 0; i < 10; i++) {
       assertEquals(correct.get(i), list.get(i));
+      assertEquals(correct.get(i), list2.get(i));
     }
   }
 
   @Test
-  public void streamTest4() {
+  public void distinctTest() {
     MyPriorityQueue<Integer, Integer> queue = new MyPriorityQueue<>();
     for (int i = 0; i < 20; i++) {
       queue.insert(19 - i, i % 10);
@@ -93,7 +120,7 @@ public class AppTest {
   }
 
   @Test
-  public void streamTest5() {
+  public void skipLimitTest() {
     MyPriorityQueue<Integer, Integer> queue = new MyPriorityQueue<>();
     for (int i = 0; i < 20; i++) {
       queue.insert(19 - i, i);
@@ -104,7 +131,7 @@ public class AppTest {
   }
 
   @Test
-  public void streamTest6() {
+  public void reduceTest() {
     MyPriorityQueue<Integer, String> queue = new MyPriorityQueue<>();
     for (int i = 1; i <= 20; i++) {
       queue.insert(i, "" + i);
@@ -117,6 +144,84 @@ public class AppTest {
     assertEquals(Optional.of(1), min);
     Optional<Integer> reduce = queue.stream().map(Map.Entry::getKey).reduce(Integer::min);
     assertEquals(min, reduce);
+    Integer reduceWithIdentity = queue.stream().map(Map.Entry::getKey).reduce(500, Integer::min);
+    assertEquals(min.get(), reduceWithIdentity);
     assertTrue(queue.stream().map(Map.Entry::getKey).anyMatch(key -> key * 4 == 20));
+  }
+
+  @Test
+  public void peekTest() {
+    MyPriorityQueue<Integer, String> queue = new MyPriorityQueue<>();
+    queue.insert(500, "Matvey1");
+    queue.insert(400, "Matvey2");
+    queue.insert(300, "Matvey3");
+    queue.insert(200, "Matvey4");
+    String[] arr =
+        queue.stream()
+            .peek(value -> value.setValue(value.getValue().toLowerCase()))
+            .map(Map.Entry::getValue)
+            .toArray(String[]::new);
+    String[] correct = {"matvey1", "matvey2", "matvey3", "matvey4"};
+    assertArrayEquals(correct, arr);
+  }
+
+  @Test
+  public void forEachTest() {
+    MyPriorityQueue<Integer, String> queue = new MyPriorityQueue<>();
+    queue.insert(500, "Matvey1");
+    queue.insert(400, "Matvey2");
+    queue.insert(300, "Matvey3");
+    queue.insert(200, "Matvey4");
+    List<Integer> keys1 = new ArrayList<>();
+    List<Integer> keys2 = new ArrayList<>();
+    queue.stream().forEach(elem -> keys1.add(elem.getKey() * 2));
+    queue.stream().forEachOrdered(elem -> keys2.add(elem.getKey() * 2));
+    Integer[] correct = {1000, 800, 600, 400};
+    for (int i = 0; i < 4; i++) {
+      assertEquals(correct[i], keys1.get(i));
+      assertEquals(correct[i], keys2.get(i));
+    }
+  }
+
+  @Test
+  public void matchTest() {
+    MyPriorityQueue<Integer, Integer> queue = new MyPriorityQueue<>();
+    queue.insert(803, 145);
+    queue.insert(702, 5342);
+    queue.insert(601, 589201);
+    queue.insert(599, 312);
+    boolean result1 = queue.stream().map(Map.Entry::getKey).allMatch(key -> key % 5 != 0);
+    boolean result2 = queue.stream().map(Map.Entry::getKey).noneMatch(key -> key == 0);
+    assertEquals(result1, result2);
+  }
+
+  @Test
+  public void findAnyTest() {
+    MyPriorityQueue<Integer, String> queue = new MyPriorityQueue<>();
+    queue.insert(5, "test");
+    Optional<String> res = queue.stream().map(Map.Entry::getValue).findAny();
+    if (!res.isPresent()) {
+      fail();
+    }
+    assertEquals(queue.extractMax(), res.get());
+    assertEquals(0, queue.stream().count());
+  }
+
+  @Test
+  public void flatMapTest() {
+    MyPriorityQueue<Integer, List<Integer>> queue = new MyPriorityQueue<>();
+    List<Integer> value1 = new ArrayList<>();
+    value1.add(1);
+    queue.insert(500, value1);
+    List<Integer> value2 = new ArrayList<>();
+    value2.add(2);
+    queue.insert(400, value2);
+    List<Integer> value3 = new ArrayList<>();
+    value3.add(3);
+    queue.insert(300, value3);
+    Integer[] flatMapResult =
+        queue.stream().map(Map.Entry::getValue).flatMap(List::stream).toArray(Integer[]::new);
+    Integer[] correct = {1, 2, 3};
+    assertArrayEquals(correct, flatMapResult);
   }
 }

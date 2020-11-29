@@ -113,7 +113,7 @@ public class MyPriorityQueue<K extends Comparable<K>, V> implements Iterable<V> 
     public <R> Stream<R> flatMap(Function<? super T, ? extends Stream<? extends R>> mapper) {
       Builder<R> builder = new Builder<R>();
       for (T elem : streamContent) {
-        mapper.apply(elem).peek(builder);
+        mapper.apply(elem).forEachOrdered(builder);
       }
       return builder.build();
     }
@@ -151,6 +151,9 @@ public class MyPriorityQueue<K extends Comparable<K>, V> implements Iterable<V> 
       Builder<T> builder = new Builder<T>();
       if (streamContent.isEmpty()) {
         return builder.build();
+      }
+      if (!(streamContent.get(0) instanceof Comparable)) {
+        throw new ClassCastException();
       }
       streamContent.sort(
           new Comparator<T>() {
@@ -452,9 +455,9 @@ public class MyPriorityQueue<K extends Comparable<K>, V> implements Iterable<V> 
   public Iterator<V> iterator() {
     return new QueueIterator();
   }
-
   /**
-   * Adds new pair of key and value to the queue
+   * Adds new pair of key and value to the queue If the elements have the same keys, then the one
+   * that was added to the queue will be there first
    *
    * @param key the key to be added
    * @param value the value to be added
