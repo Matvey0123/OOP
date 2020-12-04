@@ -74,4 +74,17 @@ public class Tests {
     gradeBook.setMarkForDiplomaProject(Grade.EXC);
     assertTrue("red diploma!", gradeBook.redDiploma());
   }
+
+  @Test
+  public void testRedDiploma() {
+    GradeBook gradeBook = new GradeBook(8);
+    gradeBook.addSubject(new Subject("Maths", FinalChallenge.EXAM, Grade.SAT), 1);
+    gradeBook.addSubject(new Subject("PE", FinalChallenge.CREDIT, Grade.PASS), 1);
+    gradeBook.addSubject(new Subject("Programming", FinalChallenge.DIFF_CREDIT, Grade.EXC), 1);
+
+    gradeBook.addSubject(new Subject("Maths", FinalChallenge.EXAM, Grade.EXC), 2);
+    gradeBook.addSubject(new Subject("PE", FinalChallenge.CREDIT, Grade.PASS), 2);
+    gradeBook.addSubject(new Subject("Programming", FinalChallenge.DIFF_CREDIT, Grade.EXC), 2);
+    assertFalse(gradeBook.redDiploma());
+  }
 }

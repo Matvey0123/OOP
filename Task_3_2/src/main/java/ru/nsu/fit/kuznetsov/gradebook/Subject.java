@@ -17,11 +17,12 @@ public class Subject {
    */
   public Subject(String name, FinalChallenge challenge, Grade mark) {
     if (challenge == FinalChallenge.CREDIT && mark != Grade.FAIL && mark != Grade.PASS) {
-      throw new IllegalArgumentException();
+      throw new IllegalArgumentException("The Grade for CREDIT must be only PASS or FAIL");
     }
     if ((challenge == FinalChallenge.DIFF_CREDIT || challenge == FinalChallenge.EXAM)
         && (mark == Grade.PASS || mark == Grade.FAIL)) {
-      throw new IllegalArgumentException();
+      throw new IllegalArgumentException(
+          "The Grade for DIFF_CREDIT or EXAM mustn't be PASS or FAIL");
     }
     this.name = name;
     this.challenge = challenge;

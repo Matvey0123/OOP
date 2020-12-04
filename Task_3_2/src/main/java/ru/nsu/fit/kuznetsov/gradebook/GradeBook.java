@@ -29,7 +29,7 @@ public class GradeBook {
    */
   public void setMarkForDiplomaProject(Grade markForDiplomaProject) {
     if (markForDiplomaProject == Grade.FAIL || markForDiplomaProject == Grade.PASS) {
-      throw new IllegalArgumentException();
+      throw new IllegalArgumentException("The Grade for a diploma project mustn't be PASS or FAIL");
     }
     this.markForDiplomaProject = markForDiplomaProject;
   }
@@ -167,7 +167,7 @@ public class GradeBook {
     if (semesters.size() == totalCountSemesters) {
       return checkDiplomaProjectExc() && checkSatMarks() && checkPercentOfExcGrades();
     }
-    return true;
+    return checkSatMarks();
   }
 }
 
