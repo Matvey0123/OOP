@@ -3,7 +3,14 @@ package ru.nsu.fit.kuznetsov.calculator;
 import java.util.EmptyStackException;
 import java.util.Stack;
 
+/** This class allows us to evaluate expression in prefix and postfix form using stack. */
 public class Calculator {
+  /**
+   * Applies the operation to the specified number of arguments in stack.
+   *
+   * @param stack the stack that contains arguments
+   * @param operation the operation to be applied
+   */
   private void apply(Stack<Float> stack, String operation) {
     Float num1, num2;
     try {
@@ -58,6 +65,13 @@ public class Calculator {
     }
   }
 
+  /**
+   * Evaluates the expression in postfix form
+   *
+   * @param exprPost the expression to be evaluated
+   * @return the result of evaluation as float
+   * @throws IllegalArgumentException if the expression is incorrect
+   */
   public float evaluate(String[] exprPost) throws IllegalArgumentException {
     Stack<Float> stack = new Stack<>();
     for (String s : exprPost) {
@@ -77,7 +91,7 @@ public class Calculator {
   public static void main(String[] args) {
     String[] exprPost = new String[args.length];
     for (int i = args.length - 1; i >= 0; i--) {
-      exprPost[args.length -1 - i] = args[i];
+      exprPost[args.length - 1 - i] = args[i];
     }
     Calculator calculator = new Calculator();
     try {
