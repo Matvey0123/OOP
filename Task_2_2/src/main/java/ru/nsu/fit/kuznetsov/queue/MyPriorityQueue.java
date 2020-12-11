@@ -152,9 +152,6 @@ public class MyPriorityQueue<K extends Comparable<K>, V> implements Iterable<V> 
       if (streamContent.isEmpty()) {
         return builder.build();
       }
-      if (!(streamContent.get(0) instanceof Comparable)) {
-        throw new ClassCastException();
-      }
       streamContent.sort(
           new Comparator<T>() {
             @Override
