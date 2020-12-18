@@ -11,7 +11,7 @@ public class Calculator {
    * @param stack the stack that contains arguments
    * @param operation the operation to be applied
    */
-  private void apply(Stack<Float> stack, String operation) {
+  private void apply(MyStack<Float> stack, String operation) {
     Float num1, num2;
     try {
       switch (operation) {
@@ -73,7 +73,7 @@ public class Calculator {
    * @throws IllegalArgumentException if the expression is incorrect
    */
   public float evaluate(String[] exprPost) throws IllegalArgumentException {
-    Stack<Float> stack = new Stack<>();
+    MyStack<Float> stack = new MyStack<>();
     for (String s : exprPost) {
       try {
         float num = Float.parseFloat(s);
