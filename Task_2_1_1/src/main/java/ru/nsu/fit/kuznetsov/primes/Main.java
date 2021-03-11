@@ -1,11 +1,9 @@
 package ru.nsu.fit.kuznetsov.primes;
 
-import java.io.*;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 
 public class Main {
 
@@ -26,6 +24,7 @@ public class Main {
     } catch (Exception e) {
       e.printStackTrace();
     }
+
     System.out.println(Duration.between(before, Instant.now()).toMillis() + " ms" + " - threads");
     before = Instant.now();
     boolean resultStreams = ConcurrentWithStream.search(numbers);

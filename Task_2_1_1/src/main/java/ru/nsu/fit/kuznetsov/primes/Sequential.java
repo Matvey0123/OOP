@@ -1,18 +1,18 @@
 package ru.nsu.fit.kuznetsov.primes;
 
 import java.util.List;
+import java.util.stream.IntStream;
 
 public class Sequential {
 
   static boolean isNonPrime(List<Integer> arr) {
-    for (int value : arr) {
-      int sqrt = (int) Math.sqrt(value);
-      for (int j = 2; j <= sqrt; j++) {
-        if (value % j == 0) {
-          return true;
-        }
-      }
-    }
-    return false;
+    return arr.stream().anyMatch(Sequential::checkForNonPrime);
+  }
+
+  public static boolean checkForNonPrime(int num) {
+    return IntStream.rangeClosed(2, (int) Math.sqrt(num))
+        .filter(divider -> (num % divider == 0))
+        .findAny()
+        .isPresent();
   }
 }

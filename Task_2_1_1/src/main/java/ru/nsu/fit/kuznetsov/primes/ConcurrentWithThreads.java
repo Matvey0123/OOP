@@ -1,17 +1,14 @@
 package ru.nsu.fit.kuznetsov.primes;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.*;
+import java.util.stream.Collectors;
 
 class ConcurrentWithThreads {
   static boolean search(int numOfThreads, List<Integer> numbers) throws Exception {
     ExecutorService executorService = Executors.newFixedThreadPool(numOfThreads);
-    List<Callable<Boolean>> tasks = new ArrayList<>();
-
-    for (Integer number : numbers) {
-      tasks.add(new IsNotPrimeTask(number));
-    }
+    List<Callable<Boolean>> tasks =
+        numbers.stream().map(IsNotPrimeTask::new).collect(Collectors.toList());
     List<Future<Boolean>> result = executorService.invokeAll(tasks);
     executorService.shutdown();
 
@@ -38,12 +35,6 @@ class IsNotPrimeTask implements Callable<Boolean> {
 
   @Override
   public Boolean call() throws Exception {
-    int sqrt = (int) Math.sqrt(this.number);
-    for (int j = 2; j <= sqrt; j++) {
-      if (this.number % j == 0) {
-        return true;
-      }
-    }
-    return false;
+    return Sequential.checkForNonPrime(this.number);
   }
 }
