@@ -1,0 +1,25 @@
+{
+  "orders_num": 10,
+  "capacity": 5,
+  "bakers": [
+    {
+      "id": 1,
+      "speed": 1000
+    },
+    {
+      "id": 2,
+      "speed": 2000
+    }
+  ],
+
+  "delivers": [
+    {
+      "id": 1,
+      "speed": 1000
+    },
+    {
+      "id": 2,
+      "speed": 2000
+    }
+  ]
+}
