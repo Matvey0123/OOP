@@ -13,11 +13,12 @@ class Data {
     List<Baker> bakers = new ArrayList<>();
     List<Deliver> delivers = new ArrayList<>();
 
-    class Baker{
+    class Baker {
         int id;
         int speed;
     }
-    class Deliver{
+
+    class Deliver {
         int id;
         int speed;
     }

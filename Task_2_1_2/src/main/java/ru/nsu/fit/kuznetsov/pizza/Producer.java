@@ -22,8 +22,8 @@ public class Producer implements Runnable {
             try {
                 order = orders.take();
                 Thread.sleep(timePerOnePizza);
-                System.out.println("Baker " + bakerNum + " prepared pizza " + order);
                 store.put(order);
+                System.out.println("Baker " + bakerNum + " prepared pizza " + order);
             } catch (Exception e) {
                 e.printStackTrace();
             }

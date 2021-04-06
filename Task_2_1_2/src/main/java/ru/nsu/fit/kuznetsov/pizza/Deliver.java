@@ -2,7 +2,7 @@ package ru.nsu.fit.kuznetsov.pizza;
 
 import java.util.concurrent.BlockingQueue;
 
-public class Deliver implements Runnable{
+public class Deliver implements Runnable {
     private final BlockingQueue<Integer> store;
     private final int timeToDeliver;
     private final int deliverNum;
@@ -15,8 +15,8 @@ public class Deliver implements Runnable{
 
     @Override
     public void run() {
-        while(true){
-            try{
+        while (true) {
+            try {
                 int preparedPizza = store.take();
                 Thread.sleep(timeToDeliver);
                 System.out.println("Deliver " + deliverNum + " delivered pizza " + preparedPizza);
