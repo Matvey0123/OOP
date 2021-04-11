@@ -13,12 +13,12 @@ class Data {
     List<Baker> bakers = new ArrayList<>();
     List<Deliver> delivers = new ArrayList<>();
 
-    class Baker {
+    static class Baker {
         int id;
         int speed;
     }
 
-    class Deliver {
+    static class Deliver {
         int id;
         int speed;
     }
