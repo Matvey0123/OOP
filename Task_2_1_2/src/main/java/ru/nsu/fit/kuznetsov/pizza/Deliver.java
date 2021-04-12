@@ -9,6 +9,7 @@ public class Deliver implements Runnable {
     private final int deliverNum;
     AtomicInteger numOfProducers;
 
+
     public Deliver(BlockingQueue<Integer> store, int timeToDeliver, int deliverNum, AtomicInteger numOfProducers) {
         this.store = store;
         this.timeToDeliver = timeToDeliver;
@@ -21,19 +22,20 @@ public class Deliver implements Runnable {
         while (true) {
             try {
                 Integer preparedPizza;
-                if(numOfProducers.get() == 0){
+                if (numOfProducers.get() == 0) {
                     preparedPizza = store.poll();
-                    if(preparedPizza == null){
+                    if (preparedPizza == null) {
                         System.out.println("Deliver " + deliverNum + " finished his work!");
                         return;
                     }
-                } else{
+                } else {
                     preparedPizza = store.take();
                 }
                 Thread.sleep(timeToDeliver);
                 System.out.println("Deliver " + deliverNum + " delivered pizza " + preparedPizza);
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                System.out.println("Deliver " + deliverNum + " finished his work!");
+                return;
             }
         }
     }

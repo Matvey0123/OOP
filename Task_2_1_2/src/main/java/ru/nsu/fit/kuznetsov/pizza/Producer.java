@@ -10,6 +10,7 @@ public class Producer implements Runnable {
     final int timePerOnePizza;
     AtomicInteger numOfProducers;
 
+
     public Producer(BlockingQueue<Integer> store,
                     BlockingQueue<Integer> orders,
                     int bakerNum,
@@ -20,6 +21,7 @@ public class Producer implements Runnable {
         this.bakerNum = bakerNum;
         this.timePerOnePizza = timePerOnePizza;
         this.numOfProducers = numOfProducers;
+
     }
 
     @Override

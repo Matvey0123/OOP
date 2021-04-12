@@ -13,30 +13,39 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class Main {
 
-    static void startProcess(Data parameters){
+    static void startProcess(Data parameters) {
         BlockingQueue<Integer> store = new LinkedBlockingQueue<>(parameters.storeCapacity);
         BlockingQueue<Integer> orders = new LinkedBlockingQueue<>(parameters.ordersNum);
         AtomicInteger numOfProducers = new AtomicInteger(parameters.bakers.size());
-
         for (int i = 1; i <= parameters.ordersNum; i++) {
             orders.add(i);
         }
-        List<Thread> stuff = new ArrayList<>();
+        List<Thread> bakers = new ArrayList<>();
+        List<Thread> carriers = new ArrayList<>();
         for (int i = 0; i < parameters.bakers.size(); i++) {
             Data.Baker baker = parameters.bakers.get(i);
-            stuff.add(new Thread(new Producer(store, orders, baker.id, baker.speed, numOfProducers)));
+            bakers.add(new Thread(new Producer(store, orders, baker.id, baker.speed, numOfProducers)));
         }
         for (int i = 0; i < parameters.delivers.size(); i++) {
             Data.Deliver deliver = parameters.delivers.get(i);
-            stuff.add(new Thread(new Deliver(store, deliver.speed, deliver.id, numOfProducers)));
+            carriers.add(new Thread(new Deliver(store, deliver.speed, deliver.id, numOfProducers)));
         }
-        stuff.forEach(Thread::start);
+        bakers.forEach(Thread::start);
+        carriers.forEach(Thread::start);
         try {
-            for (Thread thread : stuff) {
+            for (Thread thread : bakers) {
                 thread.join();
             }
-        } catch (InterruptedException e){
-            stuff.forEach(Thread::interrupt);
+            for (Thread thread : carriers) {
+                thread.join(200);
+            }
+            for (Thread thread : carriers) {
+                if (thread.isAlive()) {
+                    thread.interrupt();
+                }
+            }
+        } catch (InterruptedException e) {
+            System.out.println("Interrupted exception from Main!");
         }
     }
 
