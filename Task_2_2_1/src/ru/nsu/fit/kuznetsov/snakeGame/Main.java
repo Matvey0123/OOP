@@ -101,10 +101,7 @@ public class Main extends Application {
     mainSnake.drawSnake(gc);
     drawScore();
 
-    for (int i = mainSnake.snakeBody.size() - 1; i >= 1; i--) {
-      mainSnake.snakeBody.get(i).x = mainSnake.snakeBody.get(i - 1).x;
-      mainSnake.snakeBody.get(i).y = mainSnake.snakeBody.get(i - 1).y;
-    }
+    mainSnake.move();
 
     switch (currentDirection) {
       case RIGHT:
