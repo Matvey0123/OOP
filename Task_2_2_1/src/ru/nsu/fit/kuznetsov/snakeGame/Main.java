@@ -116,6 +116,8 @@ public class Main extends Application {
       case DOWN:
         mainSnake.moveDown();
         break;
+      default:
+        break;
     }
 
     gameOver = mainSnake.gameOver();

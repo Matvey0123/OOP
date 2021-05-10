@@ -86,7 +86,7 @@ public class Snake {
     return 0;
   }
 
-  void move(){
+  void move() {
     for (int i = snakeBody.size() - 1; i >= 1; i--) {
       snakeBody.get(i).x = snakeBody.get(i - 1).x;
       snakeBody.get(i).y = snakeBody.get(i - 1).y;

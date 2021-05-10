@@ -3,7 +3,7 @@ package ru.nsu.fit.kuznetsov.snakeGame;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 
-import java.awt.*;
+import java.awt.Point;
 
 public class FoodGenerator {
 
@@ -25,7 +25,7 @@ public class FoodGenerator {
   static int foodX;
   static int foodY;
 
-  static void generateFood(Snake snake) {
+  static void generateFood(final Snake snake) {
     start:
     while (true) {
       foodX = (int) (Math.random() * Main.ROWS);
@@ -45,7 +45,7 @@ public class FoodGenerator {
     }
   }
 
-  static void drawFood(GraphicsContext gc) {
+  static void drawFood(final GraphicsContext gc) {
     gc.drawImage(
         foodImage,
         foodX * Main.SQUARE_SIZE,
