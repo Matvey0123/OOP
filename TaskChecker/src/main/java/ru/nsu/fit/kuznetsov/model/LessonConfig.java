@@ -2,11 +2,12 @@ package ru.nsu.fit.kuznetsov.model;
 
 import groovy.lang.GroovyObjectSupport;
 import lombok.Data;
-import java.util.Date;
+import lombok.EqualsAndHashCode;
 
+
+@EqualsAndHashCode(callSuper = true)
 @Data
 public class LessonConfig extends GroovyObjectSupport {
 
-    private Date lessonDate;
-
+  private String lessonDate;
 }

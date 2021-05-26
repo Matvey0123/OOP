@@ -2,12 +2,14 @@ package ru.nsu.fit.kuznetsov.model;
 
 import groovy.lang.GroovyObjectSupport;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+
 import java.util.Date;
 
+@EqualsAndHashCode(callSuper = true)
 @Data
 public class ControlMarkConfig extends GroovyObjectSupport {
 
-    private String mark;
-    private Date date;
-
+  private String name;
+  private String date;
 }

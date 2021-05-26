@@ -4,7 +4,7 @@ import lombok.Data;
 
 @Data
 public class EvaluatingParameters {
-    private int daysPastDeadline;
-    private int pointsForTask;
-    private boolean allTestsPassed;
+  private int daysPastDeadline;
+  private int pointsForTask;
+  private boolean allTestsPassed;
 }
