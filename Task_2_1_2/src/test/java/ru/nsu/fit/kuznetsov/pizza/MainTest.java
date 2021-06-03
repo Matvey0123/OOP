@@ -51,7 +51,8 @@ public class MainTest {
 
         start(is);
     }
-    private void start(InputStream is){
+
+    private void start(InputStream is) {
         assert is != null;
         Reader reader = new InputStreamReader(is);
 
