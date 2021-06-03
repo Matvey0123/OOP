@@ -17,6 +17,7 @@ public class Main {
         BlockingQueue<Integer> store = new LinkedBlockingQueue<>(parameters.storeCapacity);
         BlockingQueue<Integer> orders = new LinkedBlockingQueue<>(parameters.ordersNum);
         AtomicInteger numOfProducers = new AtomicInteger(parameters.bakers.size());
+        AtomicInteger numOfDelivers = new AtomicInteger(parameters.delivers.size());
         for (int i = 1; i <= parameters.ordersNum; i++) {
             orders.add(i);
         }
@@ -28,7 +29,7 @@ public class Main {
         }
         for (int i = 0; i < parameters.delivers.size(); i++) {
             Data.Deliver deliver = parameters.delivers.get(i);
-            carriers.add(new Thread(new Deliver(store, deliver.speed, deliver.id, numOfProducers)));
+            carriers.add(new Thread(new Deliver(store, deliver.speed, deliver.id, numOfDelivers)));
         }
         bakers.forEach(Thread::start);
         carriers.forEach(Thread::start);
@@ -47,6 +48,7 @@ public class Main {
         } catch (InterruptedException e) {
             System.out.println("Interrupted exception from Main!");
         }
+        simpleRecommendations(parameters);
     }
 
     public static void main(String[] args) throws FileNotFoundException {
@@ -56,5 +58,26 @@ public class Main {
         Data parameters = gson.fromJson(reader, Data.class);
         startProcess(parameters);
 
+    }
+
+    private static void simpleRecommendations(Data parameters) {
+
+        int orders = parameters.ordersNum;
+        int bakers = parameters.bakers.size();
+        int carriers = parameters.delivers.size();
+        int capacity = parameters.storeCapacity;
+        System.out.println("\n--- RECOMMENDATIONS ---\n");
+        if (bakers * 1.5 > capacity || carriers * 1.5 > capacity) {
+            System.out.println("You should increase your store capacity!");
+        }
+        if (bakers * 1.5 < capacity) {
+            System.out.println("You should hire more bakers!");
+        }
+        if (carriers * 1.5 < capacity) {
+            System.out.println("You should hire more delivers!");
+        }
+        if (orders < bakers && orders < carriers && orders < capacity) {
+            System.out.println("You should increase number of orders!");
+        }
     }
 }
