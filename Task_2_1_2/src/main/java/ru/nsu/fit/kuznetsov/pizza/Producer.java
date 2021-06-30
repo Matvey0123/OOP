@@ -21,7 +21,6 @@ public class Producer implements Runnable {
         this.bakerNum = bakerNum;
         this.timePerOnePizza = timePerOnePizza;
         this.numOfProducers = numOfProducers;
-
     }
 
     @Override
@@ -35,12 +34,20 @@ public class Producer implements Runnable {
                     numOfProducers.decrementAndGet();
                     return;
                 }
+                long start = System.currentTimeMillis();
                 Thread.sleep(timePerOnePizza);
                 store.put(order);
                 System.out.println("Baker " + bakerNum + " prepared pizza " + order);
+                long finish = System.currentTimeMillis();
+                long exTime = finish - start - 100;
+                if (exTime > timePerOnePizza) {
+                    System.out.println("Baker " + bakerNum + " should be kicked!!!!  Time: " + exTime);
+                    return;
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
     }
 }
+

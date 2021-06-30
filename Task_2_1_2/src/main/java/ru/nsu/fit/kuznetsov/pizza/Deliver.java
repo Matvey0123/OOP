@@ -31,8 +31,15 @@ public class Deliver implements Runnable {
                 } else {
                     preparedPizza = store.take();
                 }
+                long start = System.currentTimeMillis();
                 Thread.sleep(timeToDeliver);
                 System.out.println("Deliver " + deliverNum + " delivered pizza " + preparedPizza);
+                long finish = System.currentTimeMillis();
+                long exTime = finish - start - 100;
+                if (exTime > timeToDeliver) {
+                    System.out.println("Baker " + deliverNum + " should be kicked!!!!  Time: " + exTime);
+                    return;
+                }
             } catch (InterruptedException e) {
                 System.out.println("Deliver " + deliverNum + " finished his work!");
                 return;
